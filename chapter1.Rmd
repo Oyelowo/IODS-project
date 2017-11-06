@@ -2,3 +2,7 @@
 # About the project
 
 *Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*
+
+The course focuses on important statistical techniques utilised in research. It is hands-on, where I get to learn how to use various tools such as R, github, etc. The main theme is open science which is the new paradigm that is being pushed in today's world.
+
+The link to my repository is: https://github.com/Oyelowo/IODS-project
