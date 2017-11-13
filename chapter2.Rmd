@@ -5,3 +5,10 @@
 - Describe your work and results clearly. 
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+
+  This week focuses on data wrangling and analysis, In a survey, some questions 
+were asked to understand the students' approaches used in learning. Based on these, the following variables were extracted: gender, age, examination points,
+strategic approach, deep learning approach, attitude and surface learning approach. 
+
+  The result of my analysis showed that there were about two times more female students respondents than their male counterparts.
+Overall, attitude seems to be the most determining factor towards the success of students in their examination. Strategic learning approach also seems to contribute to some extent to the success. While age showed a very low negative effect, it cannot be concluded to be a major factor as most of the respondents were young students below 26.
