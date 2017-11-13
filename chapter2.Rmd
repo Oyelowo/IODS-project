@@ -6,8 +6,116 @@
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
 
-  **This week focuses on data wrangling, regression analysis and model validation, In a survey, some questions were asked to understand the students' approaches used in learning. Based on these, the following variables were extracted: gender, age, examination points, strategic approach, deep learning approach, attitude and surface learning approach. **
+  _This week focuses on data wrangling, regression analysis and model validation, In a survey, some questions were asked to understand the students' approaches used in learning. Based on these, the following variables were extracted: gender, age, examination points, strategic approach, deep learning approach, attitude and surface learning approach._
 
-  **The result of my analysis showed that there were about two times more female students respondents than their male counterparts. Overall, attitude seems to be the most determining factor towards the success of students in their examination. Strategic learning approach also seems to contribute to some extent to the success. While age showed a very low negative effect, it cannot be concluded to be a major factor as most of the respondents were young students below 26.**
+  _The result of my analysis showed that there were about two times more female students respondents than their male counterparts. Overall, attitude seems to be the most determining factor towards the success of students in their examination. Strategic learning approach also seems to contribute to some extent to the success. While age showed a very low negative effect, it cannot be concluded to be a major factor as most of the respondents were young students below 26._
 
-**To validate my model, I used the QQ plot, residual vs fitted and residuals vs leverage. In making choice of my predictor variables, I examined the standard error, Multiple R squared(coefficient of determination) and the p value to check the significance of variables. ggpairs() function also came in handy when getting a broad overview of the distribution of the variables.**
+_To validate my model, I used the QQ plot, residual vs fitted and residuals vs leverage. In making choice of my predictor variables, I examined the standard error, Multiple R squared(coefficient of determination) and the p value to check the significance of variables. ggpairs() function also came in handy when getting a broad overview of the distribution of the variables._
+
+
+
+```{r, message=FALSE, warning=FALSE}
+#read the students2014 data
+
+lrn14<- read.table("C:/Users/oyeda/Desktop/OPEN_DATA_SCIENCE/IODS-project/data/learning2014.txt ", header=T, sep = "\t")
+
+#Alternatively, I could also read the already wrangled data as below:
+#lrn14<- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/co#urse_2218/datasets/learning2014.txt ", header=T, sep = ",")
+
+
+#structure of the data
+str(lrn14)
+
+#dimension of the data
+dim(lrn14)
+```
+
+
+The data includes 7 variables which describes several attributes of students:
+
+- age : Age (in years) derived from the date of birth
+- attitude: Global attitude toward statistics
+-points:   Exam points
+-  gender:   Gender: M (Male), F (Female)
+-  deep: Deep Approach 
+-  surf: Surface approach 
+-  stra: Strategic approach
+
+```{r, message=FALSE, warning=FALSE}
+#load packages
+library(ggplot2)
+#install.packages("GGally")
+library(GGally)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#create a pair plot to see the broad overview of the data
+ggpairs(lrn14, aes(col=gender), lower = list(combo = wrap("facethist", bins = 20)))
+```
+
+```{r, message=FALSE, warning=FALSE}
+#summary of the data
+summary(lrn14)
+```
+By and large, we have almost twice as much female respondents out of 166 students, aside those with examination point 0. The average age is about 26 years with, the youngest being 17 years and an old student of age 55. The ages of the  respondents are mainly skewed to the right, showing they are mostly young students below 26 years. We can also see from the box plot that the age the age is non-normal and skewed to the right with some outliers. 
+
+The attitude, points and deep learning approach also have few outliers. Generally, the pairs show weak correaltions. However, attitude seems to be the most strongly correlated(although still weak) with points, for male and female. Men generally seem to have a slightly better attitude than their female counterpart, although, some male students show very poor attitude towards learning.
+
+Both genders also appear to have average to very deep learning approach.
+Female students have a slightly better strategic approach. However, there appears to be not much distinctions between examinations points of male and female students.
+Most students seem to have more above average score while a few students showed very poor performance.
+
+
+
+#trying out the model using all the variables as predictors
+```{r, message=FALSE, warning=FALSE}
+l_model<-lm(points~gender+age+attitude+deep+stra+surf, data = lrn14)
+summary(l_model)
+```
+
+**I attempted to use all the variables for the model and stepwise regression to help remove the redundant variables.**
+
+```{r, message=FALSE, warning=FALSE}
+library(MASS)   #load package
+stepw_reg<-stepAIC(l_model, direction = "both")
+```
+
+
+After using stepwise regression, I ended up with three explanatory variables namely: **_'age','attitude' and 'stra'_**
+
+Now, let's refit the model with these three variables.
+```{r, message=FALSE, warning=FALSE}
+l_model2<-lm(points ~ age + attitude + stra, data = lrn14)
+summary(l_model2)
+```
+
+As shown by the model, the p value of 'attitude' is very low below 0.05 and with higher confidence that 'attitude' significantly affects the examination points. However, the coeffient of determination(Multiple R-squared) of the model is just (0.2182)21.82% which is relatively low. The standard error of age is quite low and p value is not so high either. Hence, this could be incorporated into the model. Just as points and age showed a low negative correlation earlier, it can be seen that age has a slight negative effect(-0.08821) on the examination poitns while attitude, which showed slightly higher positive correlation with points earlier, has  a positive  effect(3.48143) on the examination points
+
+However, even though, the standard error of strategic approach is relatively high with 0.53 compared with age with 0.05, the p-value is lower. Based on this, I will remove the age because it is less significant.
+
+Finally, I am left with predictors; 'attitude' and 'strategic approach'.
+attitude and strategic approach seem to have positive effects on the exam points.
+
+
+```{r, message=FALSE, warning=FALSE}
+#Final model
+lm_final<-lm(points~stra+attitude, data = lrn14)
+summary(lm_final)
+```
+
+Although, the coefficient of determination(Multiple R-Squared) reduced slightly to 20.48% from 21.82% and the standard error only increased from 5.26 to 5.289. The difference difference is not so considerable. The p-value is also well below 0.05.
+
+With the **_'attitude'_** and **_'strategeic approach'_**, I got a higher Multiple R-squared of 0.2048 compared to 0.2011 when I used age and attitude. Thus, I decided to use **_'attitude'_** and **_'strategeic approach'_**.
+
+```{r, message=FALSE, warning=FALSE}
+par(mfrow=c(2,2))
+plot(lm_final, which = c(1,2,5))
+```
+
+As seen in the **Normal Q-Q plot**, the points fit well to the line, aside few deviations at the beginning and end. The errors can thus, be said to be normally distributed. 
+
+For the **residuals vs fitted**, it can be seen that there is a slight change as the values inceas.
+However, no observation seems to have clear **leverage** over others.
+
+
+
