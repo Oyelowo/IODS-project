@@ -1,21 +1,21 @@
 #CREATED BY: OYEDAYO OYELOWO
 #DATE: 11/11/2017
 #DESCRIPTION: WRANGLING OF DATA
+#Data source: http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt
+
+#The script was produced to wrangle the data for further analysis.
 
 #read file
 data<-read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt",
                  sep = "\t", header = T)
+#check the dimension of the data
 dim(data)
-# Create an analysis dataset with the variables gender, age, attitude,
-# deep, stra, surf and points by combining questions in the learning2014
-# data, as defined in the datacamp exercises and also on the bottom part
-# of the following page (only the top part of the page is in Finnish). 
-# http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt. Scale all
-# combination variables to the original scales (by taking the mean). 
-# Exclude observations where the exam points variable is zero. 
-# (The data should then have 166 observations and 7 variables) (1 point)
 
+#structure of the data
+str(data)
 
+#The below are the excerpts from the data page and shows information about 
+#the aggregated variables. See the above data page for more information
 # d_sm Seeking Meaning ~ D03 + D11 + D19 + D27
 # d_ri Relating Ideas ~ D07 + D14 + D22 + D30
 # d_ue Use of Evidence ~ D06 + D15 + D23 + D31
@@ -77,6 +77,9 @@ learn14$Attitude<-(learn14$Attitude)/10
 learn14<- learn14[learn14$Points!=0,]
 #This can also be done by:
 #learn14<- filter(learn14, Points!=0)
+
+#change the column names to make all the variables start with small letters(not necessary)
+colnames(learn14)[4:6]<-c("age","attitude","points")
 head(learn14)
 
 #Change the columns names to start with small letters
@@ -93,6 +96,6 @@ write.table(learn14, file="learning2014.txt", sep = '\t')
 
 #Check the exported data
 lrn14<-read.table("C:/Users/oyeda/Desktop/OPEN_DATA_SCIENCE/IODS-project/data/learning2014.txt", sep = "\t")
-str(lrn14)
-dim(lrn14)
-head(lrn14, n=4)
+str(lrn14) #Structure of the data
+dim(lrn14)  #dimension of the data
+head(lrn14, n=4)  #check the first four rows of the data
