@@ -5,4 +5,4 @@
 
 The course focuses on important statistical techniques utilised in research. It is hands-on, where I get to learn how to use various tools such as R, github, etc. The main theme is open science which is the new paradigm that is being pushed in today's world.
 
-The link to my repository is: https://github.com/Oyelowo/IODS-project
+This is the link to [my repository](https://github.com/Oyelowo/IODS-project)
