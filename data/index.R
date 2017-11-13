@@ -11,7 +11,7 @@ lrn14<- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/cours
                    header=T, sep = ",")
 # lrn14<- read.table("C:/Users/oyeda/Desktop/OPEN_DATA_SCIENCE/IODS-project/data/learning2014.txt ",
 #                    header=T, sep = "\t")
-# colnames(lrn14)[4:6]<-c("age","attitude","points")
+# 
 
 #structure of the data
 str(lrn14)

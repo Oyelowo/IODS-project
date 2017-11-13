@@ -83,7 +83,7 @@ colnames(learn14)[4:6]<-c("age","attitude","points")
 head(learn14)
 
 #Change the columns names to start with small letters
-#colnames(lrn14)[4:6]<-c("age","attitude","points")
+colnames(lrn14)[4:6]<-c("age","attitude","points")
 
 #set working directory
 setwd("C:/Users/oyeda/Desktop/OPEN_DATA_SCIENCE/IODS-project/data")
