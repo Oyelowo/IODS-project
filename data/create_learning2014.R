@@ -1,3 +1,7 @@
+#CREATED BY: OYEDAYO OYELOWO
+#DATE: 11/11/2017
+#DESCRIPTION: WRANGLING OF DATA
+
 #read file
 data<-read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt",
                  sep = "\t", header = T)
@@ -74,6 +78,9 @@ learn14<- learn14[learn14$Points!=0,]
 #This can also be done by:
 #learn14<- filter(learn14, Points!=0)
 head(learn14)
+
+#Change the columns names to start with small letters
+#colnames(lrn14)[4:6]<-c("age","attitude","points")
 
 #set working directory
 setwd("C:/Users/oyeda/Desktop/OPEN_DATA_SCIENCE/IODS-project/data")
