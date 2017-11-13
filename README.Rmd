@@ -8,5 +8,4 @@ output: html_document
 
 The course focuses on important statistical techniques utilised in research. It is hands-on, where I get to learn how to use various tools such as R, github, etc. The main theme is open science which is the new paradigm that is being pushed in today's world.
 
-This is the link to my course diary.
-https://oyelowo.github.io/IODS-project/
+This is the link to my [course diary](https://oyelowo.github.io/IODS-project/)
