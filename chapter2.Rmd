@@ -105,7 +105,7 @@ summary(lm_final)
 
 Although, the coefficient of determination(Multiple R-Squared) reduced slightly to 19.06% from 21.82% and the standard error only increased from 5.26 to 5.32. The difference is not so considerable. The p-value is also well below 0.05.
 
-Thus, I decided to use **_'attitude'_** and **_'strategic approach'_**.
+Thus, I decided to use **_'attitude'_**..
 
 ```{r, message=FALSE, warning=FALSE}
 par(mfrow=c(2,2))
