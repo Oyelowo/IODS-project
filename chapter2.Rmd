@@ -89,23 +89,23 @@ l_model2<-lm(points ~ age + attitude + stra, data = lrn14)
 summary(l_model2)
 ```
 
-As shown by the model, the p value of 'attitude' is very low below 0.05 and with higher confidence that 'attitude' significantly affects the examination points. However, the coeffient of determination(Multiple R-squared) of the model is just (0.2182)21.82% which is relatively low. The standard error of age is quite low and p value is not so high either. Hence, this could be incorporated into the model. Just as points and age showed a low negative correlation earlier, it can be seen that age has a slight negative effect(-0.08821) on the examination poitns while attitude, which showed slightly higher positive correlation with points earlier, has  a positive  effect(3.48143) on the examination points
+As shown by the model, the p value of 'attitude' is very low below 0.05 and with higher confidence that 'attitude' significantly affects the examination points. However, the coeffient of determination(Multiple R-squared) of the model is just (0.2182)21.82% which is relatively low. The standard error of age is quite low but age seems insignificant.  Just as points and age showed a low negative correlation earlier, it can be seen that age has a slight negative effect(-0.08821) on the examination points while attitude, which showed slightly higher positive correlation with points earlier, has  a positive  effect(3.48143) on the examination points
 
-However, even though, the standard error of strategic approach is relatively high with 0.53 compared with age with 0.05, the p-value is lower. Based on this, I will remove the age because it is less significant.
+I will remove the age and strategic approach because they are insignificant with p-values lower than 0.05.
 
-Finally, I am left with predictors; 'attitude' and 'strategic approach'.
-attitude and strategic approach seem to have positive effects on the exam points.
+Finally, I am left with predictors;'attitude' 
+attitude seems to have positive effect on the exam points.
 
 
 ```{r, message=FALSE, warning=FALSE}
 #Final model
-lm_final<-lm(points~stra+attitude, data = lrn14)
+lm_final<-lm(points~attitude, data = lrn14)
 summary(lm_final)
 ```
 
-Although, the coefficient of determination(Multiple R-Squared) reduced slightly to 20.48% from 21.82% and the standard error only increased from 5.26 to 5.289. The difference difference is not so considerable. The p-value is also well below 0.05.
+Although, the coefficient of determination(Multiple R-Squared) reduced slightly to 19.06% from 21.82% and the standard error only increased from 5.26 to 5.32. The difference is not so considerable. The p-value is also well below 0.05.
 
-With the **_'attitude'_** and **_'strategeic approach'_**, I got a higher Multiple R-squared of 0.2048 compared to 0.2011 when I used age and attitude. Thus, I decided to use **_'attitude'_** and **_'strategic approach'_**.
+Thus, I decided to use **_'attitude'_** and **_'strategic approach'_**.
 
 ```{r, message=FALSE, warning=FALSE}
 par(mfrow=c(2,2))
