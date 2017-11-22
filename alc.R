@@ -43,8 +43,8 @@ attach(alc)   #attach all the variables in the dataframe
 
 
 # define a new logical column 'high_use'
-# alc$high_use<- alc$alc_use > 2
-# alc <- mutate(alc, high_use = alc_use > 2)
+ alc$high_use<- alc$alc_use > 2
+ alc <- mutate(alc, high_use = alc_use > 2)
 
 #subsetting my chosen variables
 hyp<- alc[,c("age", "sex",  "absences","freetime","alc_use")]
@@ -60,6 +60,7 @@ hyp + geom_bar()
 #and 184 male students.
 
 
+hyp<- alc[,c("age", "sex",  "absences","freetime","alc_use")]
 #show the overview of the predictors and response variable(non-binomial)
 plot_hyp <- ggpairs(hyp, mapping = aes(col=sex, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
 plot_hyp   #draw the plot

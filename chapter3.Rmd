@@ -1,4 +1,10 @@
 
+#Logistic regression
+
+The data includes students' secondary education accomplishment of two portuguese schools. The data attributes include student grades, demographic, social and school related features')  and it was collected by using school reports and questionnaires. Two datasets are provided regarding the performance in two distinct subjects: Mathematics (mat) and Portuguese language (por). In [Cortez and Silva, 2008], the two datasets were modeled under binary/five-level classification and regression tasks. Important note: the target attribute G3 has a strong correlation with attributes G2 and G1. This occurs because G3 is the final year grade (issued at the 3rd period), while G1 and G2 correspond to the 1st and 2nd period grades. It is more difficult to predict G3 without G2 and G1, but such prediction is much more useful (see paper source for more details).
+(This is the data source)[https://archive.ics.uci.edu/ml/datasets/Student+Performance]
+
+
 ###Data Set Information:
 Data was gotten from this (source) [http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt] 
   
@@ -20,11 +26,12 @@ dim(alc)    #dimension
 str(alc)   #structure
 ```
 
-The data includes students' secondary education accomplishment of two portuguese schools. The data attributes include student grades, demographic, social and school related features')  and it was collected by using school reports and questionnaires. Two datasets are provided regarding the performance in two distinct subjects: Mathematics (mat) and Portuguese language (por). In [Cortez and Silva, 2008], the two datasets were modeled under binary/five-level classification and regression tasks. Important note: the target attribute G3 has a strong correlation with attributes G2 and G1. This occurs because G3 is the final year grade (issued at the 3rd period), while G1 and G2 correspond to the 1st and 2nd period grades. It is more difficult to predict G3 without G2 and G1, but such prediction is much more useful (see paper source for more details).
-(This is the data source)[https://archive.ics.uci.edu/ml/datasets/Student+Performance]
 
 ```{r, message=FALSE, warning=FALSE}
 attach(alc)   #attach all the variables in the dataframe
+# define a new logical column 'high_use'
+alc$high_use<- alc$alc_use > 2
+#alc <- mutate(alc, high_use = alc_use > 2) #alternative
 ```
 
 ###Hypotheses.
@@ -34,9 +41,9 @@ attach(alc)   #attach all the variables in the dataframe
 -  _freetime after school is not related to alcohol consumption_
 
 
-###subsetting and exploring my chosen variables
+##subsetting and exploring my chosen variables
 ```{r, message=FALSE, warning=FALSE}
-hyp<- alc[,c("age", "sex",  "absences","freetime","alc_use", "G3")]
+hyp<- alc[,c("age", "sex",  "absences","freetime","alc_use")]
 #exploring my chosen variables
 # draw a bar plot of each variable
 hyp<-gather(hyp) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free")
@@ -46,8 +53,10 @@ The above shows the distribution of the chosen predictors and also scale of alco
 The students seem to have quite enough free time. The respondents include 198 female students and 184 male students.
 
 
-###Overview of the chosen predictors and alcohol consumption variable.
+##Overview of the chosen predictors and alcohol consumption variable.
 ```{r, message=FALSE, warning=FALSE}
+
+hyp<- alc[,c("age", "sex",  "absences","freetime","alc_use")]
 #show the overview of the predictors and response variable(non-binomial)
 plot_hyp <- ggpairs(hyp, mapping = aes(col=sex, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
 plot_hyp   #draw the plot
@@ -57,7 +66,7 @@ Largely, all the predictors show no correlation, hence, the issue of multicoline
 Nevertheless, it should be recalled that correlation is not causation. Hence, I will dig further to understand the effects of these predictors on alcohol consumption amongst students and see if they are significant.
 
 
-
+##Crosstabs
 **The below are crosstabs that compare the predictors with alcohol consumption**
 ```{r, message=FALSE, warning=FALSE}
 #using the binomial response(high_use)
@@ -75,7 +84,7 @@ summarise(group_by(alc, freetime,high_use), count=n(), mean_grade=mean(G3))
 ```
 
 
-
+##Bar chats
 ###The age distribution by sex
 ```{r, message=FALSE, warning=FALSE}
 # initialize a plot of 'age'
@@ -142,7 +151,7 @@ For students in romantic relationships, they generally have lower number of them
 
 ##BOXPLOTS
 **Below are boxplots to give clearer pictures, as explained earlier.
-###Relationship of alcohol consumption with absences
+##Relationship of alcohol consumption with absences
 ```{r, message=FALSE, warning=FALSE}
 # initialise a plot of high_use and absences
 h_ab<- ggplot(alc, aes(x=high_use, y=absences,col=sex))
