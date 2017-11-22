@@ -15,10 +15,12 @@ alc<- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_
 
 # glimpse at the alc data
 colnames(alc)
+summary(alc)
+dim(alc)
+str(alc)
 
-#DEscribe the data briefly here.
-
-# This data approach student achievement in secondary education of two Portuguese schools. 
+#Describe the data briefly here.
+#The data includes students' secondary education accomplishment of two portuguese schools.
 # The data attributes include student grades, demographic, social and school related features') 
 # a'nd it was collected by using school reports and questionnaires. Two datasets are 
 # provided regarding the performance in two distinct subjects: Mathematics (mat) and 
@@ -28,173 +30,148 @@ colnames(alc)
 # is the final year grade (issued at the 3rd period), while G1 and G2 correspond to the 
 # 1st and 2nd period grades. It is more difficult to predict G3 without G2 and G1, but 
 # such prediction is much more useful (see paper source for more details).
+#source: https://archive.ics.uci.edu/ml/datasets/Student+Performance
 
 
-
-attach(alc)
-#####2
+attach(alc)   #attach all the variables in the dataframe
+#####
 #hypotheses.
 #age is not related to alcohol consumption
 #sex is not related to alcohol consumption
 #absence from school is not related to alcóhol use
-#alcohol use is not related to performance
-#freetime after is not related to alcohol consumption
-#romantic relationhip is not related to alcohol consumption
+#freetime after school is not related to alcohol consumption
 
 
 # define a new logical column 'high_use'
-alc <- mutate(alc, high_use = alc_use > 2)
+# alc$high_use<- alc$alc_use > 2
+# alc <- mutate(alc, high_use = alc_use > 2)
 
 #subsetting my chosen variables
-hyp<- alc[,c("age", "sex",  "absences", "G3", "freetime", "romantic","alc_use")]
+hyp<- alc[,c("age", "sex",  "absences","freetime","alc_use")]
 
 #exploring my chosen variables
 # draw a bar plot of each variable
-g1=gather(hyp) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free")
-
-g1 + geom_bar()
-
-
-p2 <- ggpairs(hyp, mapping = aes(col=sex, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
-
-#draw the plot
-p2
+hyp<-gather(hyp) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free")
+hyp + geom_bar()
+#The above shows the distribution of the chosen predictors and also scale of alcohol
+#consumption. The ages of the students are mainly within 15-19 with few students aged 20 and 22.
+#Generally, there are relatively few chronic alcohol consumers amongst the students.
+#The students seem to have quite enough free time. The respondents include 198 female students
+#and 184 male students.
 
 
+#show the overview of the predictors and response variable(non-binomial)
+plot_hyp <- ggpairs(hyp, mapping = aes(col=sex, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
+plot_hyp   #draw the plot
 
-cor.test(alc$age, alc$alc_use)
-cor.test(alc$absences, alc$alc_use)
-cor.test(alc$freetime, alc$alc_use)
-cor.test(alc$G3, alc$alc_use)
+#Here, we can see that the female students seem to be generally quite older and there
+#are both male and female students that are much older than the general sample of the
+#students.  The absences are not so high but some chronic absentees amongst the
+#the students(both male and female). Most of the students are quite free but a few of the
+#students are very busy.
+#Largely, all the predictors show no correlation, hence, the issue of multicolinearity
+#is not a problem here. However, these predictors still show very weak correlation 
+#with alcohol consumption. 
+#Nevertheless, it should be recalled that correlation is not causation. Hence, I will
+#dig further to understand the effects of these predictors on alcohol consumption
+#amongst students and see if they are significant.
 
-alc$freetime2 <- cut(alc$freetime, breaks = (c(0,3,5)))
-levels(alc$freetime2)<- c("low", "high")
-colnames(alc)
+
+#The below are crosstabs that compare the predictors with alcohol consumtion
+#using the binomial response(high_use)
 
 #it is also possible to use simple crosstabs e.g
 #xtabs(high_use~age, data = alc)
-
 #but below is a more comprehensive crosstab.
 #Crosstabs
-alc %>% group_by(romantic, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
+summarise(group_by(alc, age,high_use), count=n(), mean_grade=mean(G3))
 #an alternative and preferrable way of doing the above
-#summarise(group_by(alc, romantic,high_use), count=n(), mean_grade=mean(G3))
+#alc %>% group_by(age, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
 
-alc %>% group_by(sex, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
-alc %>% group_by(freetime2, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
-alc %>% group_by(paid, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
-alc %>% group_by(paid, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
-alc %>% group_by(paid, high_use) %>% summarise(count=n(), mean_grade =  mean(G3))
-
-
+summarise(group_by(alc, sex,high_use), count=n(), mean_grade=mean(G3))
+summarise(group_by(alc, absences,high_use), count=n(), mean_grade=mean(G3))
+summarise(group_by(alc, freetime,high_use), count=n(), mean_grade=mean(G3))
 
 
 ############
-#age by sex
+#The age distribution by sex
 # initialize a plot of 'age'
-g3 <- ggplot(data = alc, aes(x=age, col=sex))
+sex_age <- ggplot(data = alc, aes(x=age, col=sex))
 
 # draw a bar plot of age by sex
-g3 + geom_bar() + facet_wrap("sex")
+sex_age + geom_bar() + facet_wrap("sex")
 
 
 
+#high alcohol consumption by sex
 # initialize a plot of 'high_use'
-g2 <- ggplot(data = alc, aes(x=high_use, col=sex))
+hu_sex <- ggplot(data = alc, aes(x=sex, col=sex))
 
 # draw a bar plot of high_use by sex
-g2 + geom_bar() + facet_wrap("sex")
+hu_sex + geom_bar() + facet_wrap("high_use")
+#Here, we can see that there are more female who do are not high consumers of alcohol
+#compared to men. Men consume more alchols than their female counterparts.
 
 
 
 #######################################3
 #High use vs freetime
 # initialize a plot of 'high_use'
-gft <- ggplot(data = alc, aes(x=high_use, col=freetime))
+hu_ft <- ggplot(data = alc, aes(x=freetime, col=sex))
 
 # draw a bar plot of 'high_use' by freetime
-gft + geom_bar() + facet_wrap("freetime")
-
-
-# initialize a plot of 'freetime'
-gft2 <- ggplot(data = alc, aes(x=freetime, col=high_use))
-
-# draw a bar plot of freetime by
-gft2 + geom_bar() + facet_wrap("high_use")
-
-
+hu_ft + geom_bar() + facet_wrap("high_use")
+#Most students with more freetime seem not to consume alcohol as one would expect
 
 #######################################
 #High use vs absences
 # initialize a plot of 'high_use'
-gft <- ggplot(data = alc, aes(x=absences, col=high_use))
+hu_ab <- ggplot(data = alc, aes(x=absences, col=sex))
 
 # draw a bar plot of 'high_use' by freetime
-gft + geom_bar() + facet_wrap("high_use")
-
-
-#######################################
-#High use vs absences
-# initialize a plot of 'high_use'
-gft <- ggplot(data = alc, aes(x=absences, col=sex))
-
-# draw a bar plot of 'high_use' by freetime
-gft + geom_bar() + facet_wrap("high_use")
+hu_ab + geom_bar() + facet_wrap("high_use")
+#few of the absentees are alcoholic but many are not.
 
 #######################################
 #High use vs age
 # initialize a plot of 'high_use'
-gft <- ggplot(data = alc, aes(x=age, col=high_use))
+hu_ag <- ggplot(data = alc, aes(x=age, col=sex))
 
 # draw a bar plot of 'high_use' by freetime
-gft + geom_bar() + facet_wrap("high_use")
-
+hu_ag + geom_bar() + facet_wrap("high_use")
+#some of the young students below 20 years are high consumers of alcohol,
+#but less so of those that are not high alchol consumers.
 
 #######################################
 #High use vs romantic
 # initialize a plot of 'high_use'
-gft <- ggplot(data = alc, aes(x=romantic, col=high_use))
+hu_rom <- ggplot(data = alc, aes(x=romantic, col=sex))
 
 # draw a bar plot of 'high_use' by freetime
-gft + geom_bar() + facet_wrap("high_use")
-
-gft <- ggplot(data = alc, aes(x=high_use, col=sex))
-
-# draw a bar plot of 'high_use' by freetime
-gft + geom_bar() + facet_wrap("romantic")
-
-
-
-
-
+hu_rom + geom_bar() + facet_wrap("high_use")
+#For students in romantic relationships, they generally have lower number of them that
+#are high consumers of alcohol. This is same with those in no romatic relationships.
 
 ############################
 ############################
-#relationship of alcohol consumption with grades
-# initialize a plot of high_use and G3
-h_s <- ggplot(alc, aes(x = high_use, y = G3, col=sex))
 
-# define the plot as a boxplot and draw it
-h_s + geom_boxplot() + ylab("grade")+ ggtitle("Student grades by alcohol consumption and sex")
-
-############################
+#Below are boxplots to give clearer pictures, as explained earlier.
 #relationship of alcohol consumption with absences
 # initialise a plot of high_use and absences
 h_ab<- ggplot(alc, aes(x=high_use, y=absences,col=sex))
 
-
 # define the plot as a boxplot and draw it
-h_ab + geom_boxplot() + ggtitle("Student absences by alcohol consumption and sex")
-
+h_ab + geom_boxplot() + ggtitle("Student absences vs alcohol consumption")
+#there are a few chronic absentees amongst male and female students, but 
+#generally, most of the students have low absences.
 
 #############################
 #relationship of alcohol consumption with age
 # initialise a plot of high_use and age
 h_ag<- ggplot(alc, aes(x=high_use, y=age,col=sex))
 
-
 # define the plot as a boxplot and draw it
-h_ag + geom_boxplot() + ggtitle("Student's age by alcohol consumption and sex")
+h_ag + geom_boxplot() + ggtitle("Students' age vs alcohol consumption")
 
 
 #############################
@@ -202,20 +179,8 @@ h_ag + geom_boxplot() + ggtitle("Student's age by alcohol consumption and sex")
 # initialise a plot of high_use and freetime
 h_fr<- ggplot(alc, aes(x=high_use, y=freetime,col=sex))
 
-
 # define the plot as a boxplot and draw it
-h_fr + geom_boxplot() + ggtitle("Student's freetime by alcohol consumption and sex")
-
-
-
-#############################
-#relationship of alcohol consumption with romantic relationship
-# initialise a plot of high_use and romantic
-alc_ro<- ggplot(alc, aes(y=alc_use, x=romantic,col=sex))
-
-
-# define the plot as a boxplot and draw it
-alc_ro + geom_boxplot() + ggtitle("Student's romantic relationship by alcohol consumption and sex")
+h_fr + geom_boxplot() + ggtitle("Student's freetime vs alcohol consumption")
 
 
 
@@ -224,36 +189,34 @@ alc_ro + geom_boxplot() + ggtitle("Student's romantic relationship by alcohol co
 # initialise a plot of high_use and sex
 alc_sex<- ggplot(alc, aes(y=alc_use, x=sex,col=sex))
 
-
 # define the plot as a boxplot and draw it
 alc_sex + geom_boxplot() + ggtitle("Student's alcohol consumption by sex")
+#There are a few female students with quite high alcohol consumption.'
+#but the alcohol consumption levels do not vary as much as they do amongst
+#the male students.
 
 
 
-
-
-
-
-
-# Use logistic regression to statistically explore the relationship between your
-# chosen variables and the binary high/low alcohol consumption variable as the 
-# target variable. Present and interpret a summary of the fitted model. Present 
-# and interpret the coefficients of the model as odds ratios and provide confidence
-# intervals for them. Interpret the results and compare them to your previously 
-# stated hypothesis. Hint: If your model includes factor variables see for 
-# example the first answer of this stackexchange thread on how R treats and how 
-# you should interpret these variables in the model output (or use some other 
-# resource to study this). (0-5 points)
+###########################################################################
+#Logistic regression
 
 #fitting the glm model
-high_use_mod1<- glm(high_use~ age + sex + failures + absences + G3 + freetime + romantic, data= alc, family = "binomial")
+high_use_mod1<- glm(high_use~ age + sex + absences + freetime , data= alc, family = "binomial")
 summary(high_use_mod1)
+
+
 # coef(high_use_mod1)
 # coefficients(high_use_mod1)
+#The predictors "age" and "freetime "are not significant. Hence, these could be 
+#considered as redundant variables and not have consierable effect on alcohol 
+#consumption compared with asences and sex which are significant.
+#hence, I could accept the null hypothesis that age and freetime are not 
+#related to alcohol consumption.
+#On the other hand, I reject the null hypothesis that male sex and absences are not 
+#related to alcohol consumption. They both have positive effects on alcohol consumption.
 
-high_use_mod2<- glm(high_use~  sex + failures + absences, data= alc, family = "binomial")
+high_use_mod2<- glm(high_use~  sex + absences, data= alc, family = "binomial")
 summary(high_use_mod2)
-
 #options("contrasts")
 
 
@@ -263,22 +226,28 @@ anova(high_use_mod1, high_use_mod2, test="LRT")
 #Hence, 'sex' and 'absences' are significant enough without the redundant variables.
 
 
+#let's also see if "sex" is alos significant in the prediction
+high_use_mod3<- glm(high_use~  absences, data= alc, family = "binomial")
+anova(high_use_mod2, high_use_mod3, test="LRT")
+#The test shows that sex is important and would remain in the model.
 
+#Hence, final model is: high_use~  sex + absences
 
 #calculating the odds ratio
 # compute odds ratios (OR)
 odds_ra <- exp(coef(high_use_mod2))
 #odds_ra <- coef(high_use_mod2) %>% exp     #alternaive
 
-
 # compute confidence intervals (conf_int)
 conf_int <- exp(confint(high_use_mod2)) 
 #Conf_Int <- high_use_mod2 %>%  confint() %>% exp   #alternative
 
-
 # print out the odds ratios with their confidence intervals
-cbind(Odds_Ra, Conf_Int)
-
+cbind(odds_ra, conf_int)
+#Here, we can see that Male sex and absences are positively associated with
+#success and are more likely to affect alcohol consumption.
+#the confident interval of Male sex is quite high compared to "absences"
+#which is narrower and much more likely to affect alcohol consumption.
 
 
 #Using the variables which, according to your logistic regression model, 
@@ -304,13 +273,15 @@ alc$prob_high_use <- probs
 alc$predict_high_use<- (alc$prob_high_use)>0.5
 #alc <- mutate(alc, prediction = prob_high_use>0.5)
 
-# see the last ten original classes, predicted probabilities, and class predictions
+# see the first ten and last ten original classes, predicted probabilities, and class predictions
+head(alc[,c("failures", "absences", "sex", "high_use", "prob_high_use", "predict_high_use")], n=10)
 select(alc, failures, absences, sex, high_use, prob_high_use, predict_high_use) %>% tail(10)
-tail(hyp, 10)
+
 
 # tabulate the target variable versus the predictions
 table(high_use = alc$high_use, prediction = alc$predict_high_use)
-
+#The model rightly predicted 263 False high use and 23 True high_use of alcohol.
+#It wrongly predicted 89 True high_use and 7 False high_use
 
 ####################################################################
 
@@ -319,6 +290,7 @@ g <- ggplot(alc, aes(x = prob_high_use, y = high_use, col= predict_high_use))
 
 # define the geom as points and draw the plot
 g + geom_point()
+#The wrong preditctions were quite much
 
 # tabulate the target variable versus the predictions
 conf_mat<-table(high_use = alc$high_use, prediction = alc$predict_high_use)
@@ -330,29 +302,20 @@ addmargins(conf_mat)
 #table(high_use = alc$high_use, prediction = alc$predict_high_use) %>%  prop.table() %>% addmargins()
 
 
-#a function could be used but not necessary, since there is no reptitive process.
+#mean error of the prediction
 mean(abs(alc$high_use-alc$prob_high_use)>0.5)
+#My model has slightly lower error  of 0.25 compared with the one on datacamp with 0.26 mean error.
 
+#The below is an alternative way by firstly defining the function to calculate the mean error.
 # define a loss function (mean prediction error)
 loss_func <- function(class, prob) {
   n_wrong <- abs(class - prob) > 0.5
   mean(n_wrong)
 }
-
 # call loss_func to compute the average number of wrong predictions in the (training) data
 loss_func(class = alc$high_use, prob = alc$prob_high_use)
 
 
-# the logistic regression model m and dataset alc (with predictions) are available
-
-# define a loss function (average prediction error)
-loss_func <- function(class, prob) {
-  n_wrong <- abs(class - prob) > 0.5
-  mean(n_wrong)
-}
-
-# # compute the average number of wrong predictions in the (training) data
-loss_func(class=alc$high_use, pro=alc$predict_high_use)
 
 # K-fold cross-validation
 library(boot)
