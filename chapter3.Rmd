@@ -333,4 +333,7 @@ cv <- cv.glm(data = alc, cost = loss_func, glmfit = high_use_mod2, K = 10)
 
 # average number of wrong predictions in the cross validation
 cv$delta[1]
+
 ```
+
+[THIS IS THE LINK TO MY DATA WRANGLING](https://github.com/Oyelowo/IODS-project/blob/master/data/create_alc.R)
