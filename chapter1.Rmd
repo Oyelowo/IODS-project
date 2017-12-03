@@ -1,5 +1,5 @@
 
-# About the project
+#Chapter 1: About the project
 
 The course focuses on important statistical techniques utilised in research. It is hands-on, where I get to learn how to use various tools such as R, github, etc. The main theme is open science which is the new paradigm that is being pushed in today's world.
 

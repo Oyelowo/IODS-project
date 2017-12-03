@@ -2,12 +2,12 @@
 title: "chapter 5"
 output: html_document
 ---
+#Chapter5: Dimensionality reduction techniques
 
-###Load packages and data
+##Load packages and data
 
 ```{r warning=FALSE, message=FALSE}
 rm(list = ls())
-
 # Access GGally
 library(GGally)
 library(corrplot)
@@ -30,7 +30,7 @@ dim(human)  #the dimension of the data
 str(human)    #the structure of the data
 ```
 Description of the data set
-data originally from: http://hdr.undp.org/en/content/human-development-index-hdi
+data originally [from:]http://hdr.undp.org/en/content/human-development-index-hdi
 Modified and analysed by Oyedayo Oyelowo 2017
 The data used in this analysis consists of various development indicators in
 many countries across the globe.
@@ -38,27 +38,26 @@ the data consists of 8 variables and 155 observations. All the variables
 are numerical(all being float exept the Gross National Income per capita and
 Maternal mortality ratio which are integer).
 
-#Below are the column names and their full meanings
-"Country" = Country name
+- Below are the column names and their full meanings
+-  "Country" = Country name
 
-# Health and knowledge
+- Health and knowledge
 
-"GNI" = Gross National Income per capita
-"Life.Exp" = Life expectancy at birth
-"Edu.Exp" = Expected years of schooling
-"Mat.Mor" = Maternal mortality ratio
-"Ado.Birth" = Adolescent birth rate
+-  "GNI" = Gross National Income per capita
+-  "Life.Exp" = Life expectancy at birth
+-  "Edu.Exp" = Expected years of schooling
+-  "Mat.Mor" = Maternal mortality ratio
+-  "Ado.Birth" = Adolescent birth rate
 
-# Empowerment
+- Empowerment
 
-"Parli.F" = Percetange of female representatives in parliament
-"Edu2.F" = Proportion of females with at least secondary education
-"Edu2.M" = Proportion of males with at least secondary education
-"Labo.F" = Proportion of females in the labour force
-"Labo.M" " Proportion of males in the labour force
-
-"Edu2.FM" = Edu2.F / Edu2.M
-"Labo.FM" = Labo2.F / Labo2.M
+-  "Parli.F" = Percetange of female representatives in parliament
+-  "Edu2.F" = Proportion of females with at least secondary education
+-  "Edu2.M" = Proportion of males with at least secondary education
+-  "Labo.F" = Proportion of females in the labour force
+-  "Labo.M" = Proportion of males in the labour force
+-  "Edu2.FM" = Edu2.F / Edu2.M
+-  "Labo.FM" = Labo2.F / Labo2.M
 
 
 
@@ -116,7 +115,7 @@ pca_prop
 pc_label<-paste0(names(pca_prop), " (", pca_prop, "%)")
 ```
 
-# draw a biplot for the PCA of the unstandardised data 
+## draw a biplot for the PCA of the unstandardised data 
 ```{r warning=FALSE, message=FALSE}
 biplot(pca_unstd_human, cex = c(0.8, 1), col = c("grey40", "red"), xlab = pc_label[1], ylab = pc_label[2])
 #deeppink2
@@ -170,7 +169,7 @@ biplot(pca_unstd_human, cex = c(0.8, 1), col = c("grey40", "red"), xlab = pc_lab
 
 ##Loading the tea dataset and exploring the structure
 ```{r warning=FALSE, message=FALSE}
-library(Factominer)
+#library(FactoMineR)
 data(tea)     #load the tea dataset
 str(tea)
 dim(tea)
