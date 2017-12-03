@@ -59,12 +59,6 @@ Maternal mortality ratio which are integer).
 -  "Edu2.FM" = Edu2.F / Edu2.M
 -  "Labo.FM" = Labo2.F / Labo2.M
 
-
-
-
-
-
-
 ## visualize the 'human' variables
 ```{r warning=FALSE, message=FALSE}
 ggpairs(human)
@@ -230,7 +224,7 @@ The above plot looks a bit flavorless. Hence, I'll create a more interesting plo
 categ = apply(tea_time, 2, function(x) nlevels(as.factor(x)))
 
 categ
-rep("c", 3)
+#rep("c", 3)
 # data frame with variable coordinates
 mca_vars_df = data.frame(mca$var$coord, Variable = rep(names(categ), categ))
 mca_vars_df

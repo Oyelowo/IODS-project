@@ -136,7 +136,7 @@ biplot(pca_unstd_human, cex = c(0.8, 1), col = c("grey40", "red"), xlab = pc_lab
        main="Unstandardised")
 
 
-#We can see that the unstandardised data differ from standardised. The GNI 
+#We can see that the unstandardised data differ from standardised. The GNI
 #in the unstandardised has more leverage because it has huge values
 #and had not been scaled to be on the same level with other variables.
 #However, this was addressed in the scale data before the analysis was performed
@@ -144,7 +144,7 @@ biplot(pca_unstd_human, cex = c(0.8, 1), col = c("grey40", "red"), xlab = pc_lab
 #are almost orthogonal(at right angle) and less related to Maternal mortality ratio,
 #Adolescent birth rate, Expected years of schooling and Life expectancy at birth.
 
-#Also, while, Percetange of female representatives in parliament and Proportion 
+#Also, while, Percetange of female representatives in parliament and Proportion
 #of males in the labour force mostly contributed to the second principal component
 #others contributed to the first, as shown in the biplot.
 
