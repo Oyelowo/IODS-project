@@ -42,7 +42,7 @@ human<-head(human, nrow(human)-7)
 rownames(human)<-human$Country
 
 #remove the country column
-human_ <- select(human, -Country)
+human <- select(human, -Country)
 
 #alternative
 #country_col<- grep("Country", colnames(human))  #get the column number of "Country"
