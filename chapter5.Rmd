@@ -30,7 +30,7 @@ dim(human)  #the dimension of the data
 str(human)    #the structure of the data
 ```
 Description of the data set
-data originally [from:]http://hdr.undp.org/en/content/human-development-index-hdi
+data originally [from:](http://hdr.undp.org/en/content/human-development-index-hdi)
 Modified and analysed by Oyedayo Oyelowo 2017
 The data used in this analysis consists of various development indicators in
 many countries across the globe.

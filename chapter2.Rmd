@@ -67,7 +67,7 @@ Most students seem to have more above average score while a few students showed 
 
 
 
-#trying out the model using all the variables as predictors
+##trying out the model using all the variables as predictors
 ```{r, message=FALSE, warning=FALSE}
 l_model<-lm(points~gender+age+attitude+deep+stra+surf, data = lrn14)
 summary(l_model)
